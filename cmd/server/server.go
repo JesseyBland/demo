@@ -15,7 +15,7 @@ func init() {
 
 func main() {
 
-	port := ":8888"
+	port := ":7777"
 	ln, _ := net.Listen("tcp", port)
 	fmt.Printf("Server Status: Up\n")
 
