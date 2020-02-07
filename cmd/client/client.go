@@ -10,19 +10,21 @@ import (
 func main() {
 	var conn net.Conn
 	var err error
+	port := ":6060"
 	for {
-		conn, err = net.Dial("tcp", "localhost:6060")
-		if err == nil { //
+
+		conn, err = net.Dial("tcp", port)
+		if err == nil {
 			break
 		}
 	}
-	fmt.Println("Client Status: Looking for Server at port 6060.")
-	go Listenter(conn)
+	fmt.Println("Client Status: Looking for Server at port " + port)
+	go listener(conn)
 
-	Writer(conn)
+	writer(conn)
 }
 
-func Listenter(conn net.Conn) {
+func listener(conn net.Conn) {
 
 	for {
 
@@ -34,16 +36,15 @@ func Listenter(conn net.Conn) {
 
 }
 
-func Writer(conn net.Conn) {
-	conn.Write([]byte("\nConnection Established\n"))
+func writer(conn net.Conn) {
+	conn.Write([]byte("\nNew User!\n" + conn.LocalAddr().String() + "\n"))
 
 	for {
 
 		r := bufio.NewReader(os.Stdin)
 		text, _ := r.ReadString('\n')
-		// fmt.Print(conn.LocalAddr().String)
-		// fmt.Print(">>>>  ")
-		conn.Write([]byte(conn.LocalAddr().String() + " >>>> " + text))
+
+		conn.Write([]byte("  " + conn.LocalAddr().String() + " >>>> " + text))
 	}
 
 }

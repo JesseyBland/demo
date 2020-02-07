@@ -5,35 +5,42 @@ import (
 	"net"
 )
 
-var ConnSignal chan string = make(chan string)
+var connSignal chan string = make(chan string)
 var connections []net.Conn
+var port string
+
+func init() {
+
+}
 
 func main() {
 
 	port := ":8888"
 	ln, _ := net.Listen("tcp", port)
-	fmt.Printf("Server Status: UP\n")
+	fmt.Printf("Server Status: Up\n")
 
 	for {
-		go Session(ln)
-		fmt.Println(<-ConnSignal)
+		go session(ln)
+		fmt.Println(<-connSignal)
 
 	}
 
 }
 
-func Session(ln net.Listener) {
+func session(ln net.Listener) {
 	conn, _ := ln.Accept() //waits till it gets connection
-	ConnSignal <- "Connection Established"
-	defer conn.Close()
+	connSignal <- "Connection Established"
+
 	connections = append(connections, conn)
 
 	for {
+
 		buf := make([]byte, 1024)
 		conn.Read(buf)
 		for _, c := range connections {
 			c.Write(buf)
 		}
-		fmt.Println(string(buf))
+
+		fmt.Print(string(buf))
 	}
 }
