@@ -9,10 +9,6 @@ var connSignal chan string = make(chan string)
 var connections []net.Conn
 var port string
 
-func init() {
-
-}
-
 func main() {
 
 	port := ":7777"

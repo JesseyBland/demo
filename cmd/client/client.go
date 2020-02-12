@@ -11,6 +11,7 @@ func main() {
 	var conn net.Conn
 	var err error
 	port := ":6060"
+	fmt.Println("Client Status: Looking for Server at port " + port)
 	for {
 
 		conn, err = net.Dial("tcp", port)
@@ -18,9 +19,8 @@ func main() {
 			break
 		}
 	}
-	fmt.Println("Client Status: Looking for Server at port " + port)
-	go listener(conn)
 
+	go listener(conn)
 	writer(conn)
 }
 
@@ -30,7 +30,6 @@ func listener(conn net.Conn) {
 
 		buf := make([]byte, 1024)
 		conn.Read(buf)
-
 		fmt.Print(string(buf))
 	}
 
@@ -44,7 +43,7 @@ func writer(conn net.Conn) {
 		r := bufio.NewReader(os.Stdin)
 		text, _ := r.ReadString('\n')
 
-		conn.Write([]byte("  " + conn.LocalAddr().String() + " >>>> " + text))
+		conn.Write([]byte("\t" + conn.LocalAddr().String() + " >>>> " + text))
 	}
 
 }
